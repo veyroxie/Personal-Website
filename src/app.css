@@ -1,0 +1,89 @@
+:root {
+	/* Obsidian console: near-black surfaces, hairline structure, one emerald accent. */
+	--bg: #0a0a0b;
+	--surface: #111113;
+	--hairline: #222226;
+	--hairline-bright: #34343c;
+	--text: #e9e9ee;
+	--text-dim: #9b9ba4;
+	--text-faint: #66666f;
+
+	/* Tier accents — the only saturated colour on the page, reserved for trust signals. */
+	--live: #34d399;
+	--artifact: #f3b24c;
+	--attested: #8a8a95;
+
+	--font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+	--font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', monospace;
+
+	--measure: 720px;
+	--ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+	margin: 0;
+}
+
+html {
+	scroll-behavior: smooth;
+}
+
+body {
+	background: var(--bg);
+	color: var(--text);
+	font-family: var(--font-sans);
+	font-size: 16px;
+	line-height: 1.6;
+	-webkit-font-smoothing: antialiased;
+	text-rendering: optimizeLegibility;
+}
+
+a {
+	color: inherit;
+	text-decoration: none;
+}
+
+::selection {
+	background: var(--live);
+	color: var(--bg);
+}
+
+/* Mono labels: section eyebrows, tier badges, metrics — the "telemetry" voice. */
+.mono {
+	font-family: var(--font-mono);
+	font-size: 0.72rem;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+}
+
+/* Provenance resolving in when Audit flips on. Entry-only via @starting-style;
+   --i staggers each item so the layer populates like a trace rather than snapping. */
+.reveal {
+	opacity: 1;
+	translate: 0 0;
+	transition:
+		opacity 0.4s var(--ease) calc(var(--i, 0) * 30ms),
+		translate 0.4s var(--ease) calc(var(--i, 0) * 30ms);
+}
+
+@starting-style {
+	.reveal {
+		opacity: 0;
+		translate: 0 6px;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.reveal {
+		transition: none;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	html {
+		scroll-behavior: auto;
+	}
+}
