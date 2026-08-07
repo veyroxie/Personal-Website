@@ -1,24 +1,64 @@
+/* Editorial paper: a document that cites its sources should look like a document.
+   Cool off-white stock, near-black ink, serif prose, mono strictly for metadata.
+   One accent — proofreader's blue — reserved for the live evidence tier. */
 :root {
-	/* Obsidian console: near-black surfaces, hairline structure, one emerald accent. */
-	--bg: #0a0a0b;
-	--surface: #111113;
-	--hairline: #222226;
-	--hairline-bright: #34343c;
-	--text: #e9e9ee;
-	--text-dim: #9b9ba4;
-	/* Faint must still clear WCAG AA (4.5:1) on --bg — it carries dates, metrics, and hints. */
-	--text-faint: #7f7f8a;
+	--paper: #f7f7f5;
+	--paper-shade: #efefed;
+	--rule: #c9cac6;
+	--rule-faint: #e1e2df;
 
-	/* Tier accents — the only saturated colour on the page, reserved for trust signals. */
-	--live: #34d399;
-	--artifact: #f3b24c;
-	--attested: #8a8a95;
+	/* Ink levels: 16:1, 9:1, 4.9:1 against paper — the floor stays above WCAG AA. */
+	--ink: #1b1c1e;
+	--ink-mute: #44464a;
+	--ink-faint: #6b6d72;
 
+	/* Tier is encoded as weight, not hue: live gets the one accent, artifact is
+	   full ink, attested is visibly softer. Nothing else may use the accent. */
+	--tier-live: #2445c8;
+	--tier-artifact: #1b1c1e;
+	--tier-attested: #77787d;
+
+	--font-serif: Charter, 'Sitka Text', Cambria, Georgia, 'Times New Roman', serif;
 	--font-sans: 'Inter', system-ui, -apple-system, sans-serif;
 	--font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', monospace;
 
-	--measure: 720px;
+	/* Metadata type scale: exactly three steps, nothing below 12px. */
+	--meta-s: 0.75rem;
+	--meta-m: 0.8125rem;
+	--meta-l: 0.875rem;
+
+	/* Prose measure ~35em at 17px; the provenance margin column arrives with the
+	   component restyle and hangs outside this, not inside it. */
+	--measure: 40rem;
 	--ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+	/* Transitional aliases so components render coherently until each is restyled.
+	   Every alias is deleted in the component pass. */
+	--bg: var(--paper);
+	--surface: var(--paper-shade);
+	--hairline: var(--rule-faint);
+	--hairline-bright: var(--rule);
+	--text: var(--ink);
+	--text-dim: var(--ink-mute);
+	--text-faint: var(--ink-faint);
+	--live: var(--tier-live);
+	--artifact: var(--tier-artifact);
+	--attested: var(--tier-attested);
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--paper: #17181a;
+		--paper-shade: #1f2023;
+		--rule: #45464a;
+		--rule-faint: #2c2d30;
+		--ink: #e8e7e3;
+		--ink-mute: #b4b3ae;
+		--ink-faint: #8b8b87;
+		--tier-live: #92a8ff;
+		--tier-artifact: #e8e7e3;
+		--tier-attested: #85868b;
+	}
 }
 
 *,
@@ -33,30 +73,44 @@ html {
 }
 
 body {
-	background: var(--bg);
-	color: var(--text);
-	font-family: var(--font-sans);
-	font-size: 16px;
-	line-height: 1.6;
+	background: var(--paper);
+	color: var(--ink);
+	font-family: var(--font-serif);
+	font-size: 1.0625rem;
+	line-height: 1.65;
 	-webkit-font-smoothing: antialiased;
 	text-rendering: optimizeLegibility;
 }
 
+/* Links are neutral ink with an editorial underline; colour never signals "link",
+   it signals tier. Evidence links restyle themselves in their own components. */
 a {
 	color: inherit;
-	text-decoration: none;
+	text-decoration: underline;
+	text-decoration-color: var(--rule);
+	text-decoration-thickness: 1px;
+	text-underline-offset: 3px;
+}
+
+a:hover {
+	text-decoration-color: var(--ink);
+}
+
+:focus-visible {
+	outline: 2px solid var(--ink);
+	outline-offset: 3px;
 }
 
 ::selection {
-	background: var(--live);
-	color: var(--bg);
+	background: var(--ink);
+	color: var(--paper);
 }
 
-/* Mono labels: section eyebrows, tier badges, metrics — the "telemetry" voice. */
+/* The metadata voice: small letterspaced mono caps, floored at 12px. */
 .mono {
 	font-family: var(--font-mono);
-	font-size: 0.72rem;
-	letter-spacing: 0.08em;
+	font-size: var(--meta-s);
+	letter-spacing: 0.06em;
 	text-transform: uppercase;
 }
 
@@ -87,28 +141,26 @@ a {
 	.reveal {
 		transition: none;
 	}
-}
 
-@media (prefers-reduced-motion: reduce) {
 	html {
 		scroll-behavior: auto;
 	}
 }
 
-/* Print is the PDF a recruiter files away: light page, evidence layer expanded,
-   tier colours darkened to survive white paper. */
+/* Print now matches the screen identity; it only hides chrome, expands the
+   audit layer, and pins the light palette regardless of colour scheme. */
 @media print {
 	:root {
-		--bg: #ffffff;
-		--surface: #f5f5f6;
-		--hairline: #d8d8dc;
-		--hairline-bright: #bcbcc4;
-		--text: #111114;
-		--text-dim: #3c3c44;
-		--text-faint: #5c5c66;
-		--live: #0b7a52;
-		--artifact: #8a5a10;
-		--attested: #55555f;
+		--paper: #ffffff;
+		--paper-shade: #f4f4f2;
+		--rule: #b9bab6;
+		--rule-faint: #dcddda;
+		--ink: #111114;
+		--ink-mute: #3c3e42;
+		--ink-faint: #5c5e63;
+		--tier-live: #1c37a0;
+		--tier-artifact: #111114;
+		--tier-attested: #606166;
 	}
 
 	* {
