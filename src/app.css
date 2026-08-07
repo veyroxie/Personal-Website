@@ -6,7 +6,8 @@
 	--hairline-bright: #34343c;
 	--text: #e9e9ee;
 	--text-dim: #9b9ba4;
-	--text-faint: #66666f;
+	/* Faint must still clear WCAG AA (4.5:1) on --bg — it carries dates, metrics, and hints. */
+	--text-faint: #7f7f8a;
 
 	/* Tier accents — the only saturated colour on the page, reserved for trust signals. */
 	--live: #34d399;
@@ -59,6 +60,12 @@ a {
 	text-transform: uppercase;
 }
 
+/* The provenance layer stays in the DOM and toggles via display, not {#if},
+   so print can force it visible even when Audit was never flipped. */
+.audit-only:not(.on) {
+	display: none;
+}
+
 /* Provenance resolving in when Audit flips on. Entry-only via @starting-style;
    --i staggers each item so the layer populates like a trace rather than snapping. */
 .reveal {
@@ -85,5 +92,39 @@ a {
 @media (prefers-reduced-motion: reduce) {
 	html {
 		scroll-behavior: auto;
+	}
+}
+
+/* Print is the PDF a recruiter files away: light page, evidence layer expanded,
+   tier colours darkened to survive white paper. */
+@media print {
+	:root {
+		--bg: #ffffff;
+		--surface: #f5f5f6;
+		--hairline: #d8d8dc;
+		--hairline-bright: #bcbcc4;
+		--text: #111114;
+		--text-dim: #3c3c44;
+		--text-faint: #5c5c66;
+		--live: #0b7a52;
+		--artifact: #8a5a10;
+		--attested: #55555f;
+	}
+
+	* {
+		-webkit-print-color-adjust: exact;
+		print-color-adjust: exact;
+	}
+
+	.no-print {
+		display: none !important;
+	}
+
+	.audit-only:not(.on) {
+		display: revert;
+	}
+
+	.reveal {
+		transition: none;
 	}
 }

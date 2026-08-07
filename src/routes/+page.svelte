@@ -1,18 +1,29 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
+
+	import { base } from '$app/paths';
 	import { audit } from '$lib/audit.svelte';
 	import AuditToggle from '$lib/components/AuditToggle.svelte';
 	import Claim from '$lib/components/Claim.svelte';
 	import ProjectCard from '$lib/components/ProjectCard.svelte';
+	import TierBadge from '$lib/components/TierBadge.svelte';
 	import { resume } from '$lib/resume';
 
 	let copied = $state(false);
+	let copyTimer: ReturnType<typeof setTimeout>;
+
+	// ?audit opens straight into evidence mode, so a shared link can lead with the proof.
+	onMount(() => {
+		if (new URLSearchParams(location.search).has('audit')) audit.on = true;
+	});
 
 	async function copyPhone() {
 		// A denied clipboard is expected and non-actionable, so we just leave the badge unshown.
 		try {
 			await navigator.clipboard.writeText(resume.phone);
+			clearTimeout(copyTimer);
 			copied = true;
-			setTimeout(() => (copied = false), 1500);
+			copyTimer = setTimeout(() => (copied = false), 1500);
 		} catch {
 			copied = false;
 		}
@@ -23,7 +34,7 @@
 	<p class="eyebrow mono"><span class="num">{num}</span> {title}</p>
 {/snippet}
 
-<header class="bar">
+<header class="bar no-print">
 	<div class="bar-inner">
 		<div class="ident">
 			<span class="ident-name">{resume.name}</span>
@@ -43,7 +54,9 @@
 			<li>
 				<button class="copy" onclick={copyPhone}>
 					{resume.phone}
-					<span class="copied mono" class:show={copied}>copied</span>
+					<span class="copied mono" class:show={copied} aria-live="polite"
+						>{copied ? 'copied' : ''}</span
+					>
 				</button>
 			</li>
 			{#each resume.links as link (link.href)}
@@ -52,13 +65,30 @@
 			<li class="loc">{resume.location}</li>
 		</ul>
 
-		<p class="hint mono" aria-live="polite">
+		<p class="hint mono no-print" aria-live="polite">
 			{#if audit.on}
 				Audit on — every claim shows its tier and provenance.
 			{:else}
-				This resume cites its sources. Flip Audit to inspect the evidence behind every claim.
+				This resume cites its sources.
+				<button class="flip" onclick={() => (audit.on = true)}>Flip Audit</button>
+				to inspect the evidence behind every claim.
 			{/if}
 		</p>
+
+		<div class="legend audit-only reveal" class:on={audit.on}>
+			<div class="legend-row">
+				<TierBadge tier="live" />
+				<span>publicly verifiable right now — a link anyone can open</span>
+			</div>
+			<div class="legend-row">
+				<TierBadge tier="artifact" />
+				<span>backed by showable proof, not a public link</span>
+			</div>
+			<div class="legend-row">
+				<TierBadge tier="attested" />
+				<span>confidential source, with the reason stated</span>
+			</div>
+		</div>
 	</section>
 
 	<section>
@@ -128,9 +158,10 @@
 
 	<footer>
 		<p class="mono">
-			Built in Svelte 5 and prerendered static. The source is public, so this page is itself a
-			Live claim —
+			Last verified {resume.lastVerified}. Built in Svelte 5 and prerendered static. The source
+			is public, so this page is itself a Live claim —
 			<a href={resume.sourceHref} target="_blank" rel="noopener noreferrer">inspect it</a>.
+			Machine-readable: <a href="{base}/resume.json">resume.json</a>.
 		</p>
 	</footer>
 </main>
@@ -177,7 +208,7 @@
 
 	.ident-role {
 		color: var(--text-faint);
-		font-size: 0.6rem;
+		font-size: 0.66rem;
 		white-space: nowrap;
 	}
 
@@ -246,7 +277,7 @@
 		top: -1.4rem;
 		left: 0;
 		color: var(--live);
-		font-size: 0.55rem;
+		font-size: 0.62rem;
 		opacity: 0;
 		transition: opacity 0.2s var(--ease);
 	}
@@ -259,10 +290,56 @@
 		margin-top: 2.5rem;
 		max-width: 46ch;
 		color: var(--text-faint);
-		font-size: 0.66rem;
+		font-size: 0.7rem;
 		line-height: 1.7;
 		text-transform: none;
 		letter-spacing: 0.02em;
+	}
+
+	.flip {
+		padding: 0;
+		border: none;
+		background: none;
+		color: var(--live);
+		font: inherit;
+		letter-spacing: inherit;
+		text-transform: inherit;
+		cursor: pointer;
+	}
+
+	.flip:hover,
+	.flip:focus-visible {
+		text-decoration: underline;
+		text-underline-offset: 3px;
+	}
+
+	.legend {
+		max-width: 34rem;
+		margin-top: 1.25rem;
+		padding: 0.85rem 1rem;
+		border: 1px solid var(--hairline);
+		border-radius: 10px;
+		background: var(--surface);
+	}
+
+	.legend-row {
+		display: flex;
+		align-items: baseline;
+		gap: 0.7rem;
+	}
+
+	.legend-row + .legend-row {
+		margin-top: 0.45rem;
+	}
+
+	.legend-row > :global(.badge) {
+		flex: none;
+		width: 4.6rem;
+	}
+
+	.legend-row span {
+		color: var(--text-faint);
+		font-size: 0.78rem;
 	}
 
 	.eyebrow {
@@ -290,7 +367,7 @@
 	.role-meta {
 		margin-top: 0.5rem;
 		color: var(--text-faint);
-		font-size: 0.62rem;
+		font-size: 0.68rem;
 		text-transform: none;
 		letter-spacing: 0.02em;
 	}
@@ -315,7 +392,7 @@
 	.skill-label {
 		margin-bottom: 0.75rem;
 		color: var(--text-faint);
-		font-size: 0.62rem;
+		font-size: 0.66rem;
 	}
 
 	.skill-tags {
@@ -366,7 +443,7 @@
 
 	footer p {
 		color: var(--text-faint);
-		font-size: 0.62rem;
+		font-size: 0.68rem;
 		line-height: 1.8;
 		text-transform: none;
 		letter-spacing: 0.02em;

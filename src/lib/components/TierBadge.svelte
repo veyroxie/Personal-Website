@@ -22,7 +22,7 @@
 		align-items: center;
 		gap: 0.45em;
 		color: var(--c);
-		font-size: 0.62rem;
+		font-size: 0.66rem;
 		vertical-align: middle;
 		white-space: nowrap;
 	}

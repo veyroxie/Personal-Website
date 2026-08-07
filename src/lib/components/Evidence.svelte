@@ -2,6 +2,11 @@
 	import type { Evidence } from '$lib/resume';
 
 	let { evidence }: { evidence: Evidence } = $props();
+
+	// "last {date}" in the summary depends on newest-first, so order here, not in the data.
+	const history = $derived(
+		[...(evidence.history ?? [])].sort((a, b) => b.date.localeCompare(a.date))
+	);
 </script>
 
 <div class="evidence">
@@ -44,14 +49,14 @@
 		</span>
 	{/if}
 
-	{#if evidence.history?.length}
+	{#if history.length}
 		<details class="history">
 			<summary class="mono">
-				{evidence.history.length} revision{evidence.history.length === 1 ? '' : 's'} · last
-				{evidence.history[0].date}
+				{history.length} revision{history.length === 1 ? '' : 's'} · last
+				{history[0].date}
 			</summary>
 			<ol>
-				{#each evidence.history as rev (rev.date + rev.note)}
+				{#each history as rev (rev.date + rev.note)}
 					<li>
 						<span class="date mono">{rev.date}</span>
 						<span class="note">{rev.note}</span>
@@ -80,9 +85,9 @@
 
 	.key {
 		flex: none;
-		width: 3.2rem;
+		width: 3.4rem;
 		color: var(--text-faint);
-		font-size: 0.6rem;
+		font-size: 0.66rem;
 	}
 
 	.vals {
@@ -110,7 +115,7 @@
 		gap: 0.35em;
 		width: fit-content;
 		color: var(--live);
-		font-size: 0.68rem;
+		font-size: 0.7rem;
 	}
 
 	.link:hover {
@@ -129,7 +134,7 @@
 		gap: 0.5em;
 		width: fit-content;
 		color: var(--attested);
-		font-size: 0.66rem;
+		font-size: 0.7rem;
 	}
 
 	.lock {
@@ -140,7 +145,7 @@
 	.history summary {
 		width: fit-content;
 		color: var(--text-faint);
-		font-size: 0.64rem;
+		font-size: 0.68rem;
 		cursor: pointer;
 		list-style: none;
 	}
@@ -179,12 +184,23 @@
 	.date {
 		flex: none;
 		color: var(--text-faint);
-		font-size: 0.62rem;
+		font-size: 0.66rem;
 	}
 
 	.note {
 		color: var(--text-dim);
-		font-size: 0.75rem;
+		font-size: 0.78rem;
 		line-height: 1.5;
+	}
+
+	/* On paper the arrow icon is dead weight; the URL itself is the evidence. */
+	@media print {
+		.link .arrow {
+			display: none;
+		}
+
+		.link::after {
+			content: ' (' attr(href) ')';
+		}
 	}
 </style>

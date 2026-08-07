@@ -47,6 +47,7 @@ export type Resume = {
 	email: string;
 	phone: string;
 	links: ContactLink[];
+	siteHref: string;
 	sourceHref: string;
 	experience: Role[];
 	projects: Project[];
@@ -66,6 +67,7 @@ export const resume: Resume = {
 		{ label: 'LinkedIn', href: 'https://www.linkedin.com/in/elyesa-tee-865536320' },
 		{ label: 'GitHub', href: 'https://github.com/veyroxie' }
 	],
+	siteHref: 'https://veyroxie.github.io/Personal-Website/',
 	sourceHref: 'https://github.com/veyroxie/Personal-Website',
 
 	experience: [

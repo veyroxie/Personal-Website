@@ -9,16 +9,14 @@
 
 <li class="claim">
 	<p class="text">
-		<span>{claim.text}</span>
-		{#if audit.on}
+		<span class="body">{claim.text}</span>
+		<span class="audit-only" class:on={audit.on}>
 			<TierBadge tier={claim.evidence.tier} />
-		{/if}
+		</span>
 	</p>
-	{#if audit.on}
-		<div class="reveal" style="--i: {index}">
-			<Evidence evidence={claim.evidence} />
-		</div>
-	{/if}
+	<div class="audit-only reveal" class:on={audit.on} style="--i: {index}">
+		<Evidence evidence={claim.evidence} />
+	</div>
 </li>
 
 <style>
@@ -37,7 +35,7 @@
 		font-size: 0.95rem;
 	}
 
-	.text span {
+	.body {
 		flex: 1 1 16rem;
 	}
 </style>

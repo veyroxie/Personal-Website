@@ -21,6 +21,11 @@ discriminated union so each tier only holds the data valid for it):
 - **Artifact** — backed by showable proof (metrics, counts) but no public link.
 - **Attested** — real work whose source is confidential; carries the `reason` it's withheld.
 
+Any evidence may also carry `history`: dated `Revision` entries recording how the claim's
+provenance changed (e.g. an attested-to-artifact promotion). Rendered newest-first as a
+collapsible log; `Evidence.svelte` sorts defensively. A legend in the hero explains the tiers
+whenever Audit is on.
+
 Attested is not a redaction. It states, honestly, that production code is private — which is
 the mature signal. Nothing on the page exceeds what the resume already states publicly; the
 site attests to the work, it does not narrate confidential internals.
@@ -29,21 +34,27 @@ site attests to the work, it does not narrate confidential internals.
 
 ```
 src/lib/resume.ts        single source of truth — all content + types
+src/lib/resume.test.ts   data invariants (dates, https links, reasons); gates the deploy
 src/lib/audit.svelte.ts  shared reactive state: audit.on
 src/lib/components/
   AuditToggle.svelte     the one switch; mutates audit.on
   Claim.svelte           experience bullet: text + (audit) badge + evidence
   ProjectCard.svelte     project: name/tagline/desc + (audit) badge + evidence
   TierBadge.svelte       tier label + CSS diamond, keyed exhaustively by tier
-  Evidence.svelte        the revealed block: stack, proof, link or reason
-src/routes/+page.svelte  arrangement: header, hero, numbered sections, footer
-src/routes/+layout.*     global styles, title, prerender flag
-src/app.css              Obsidian console design tokens + .reveal animation
+  Evidence.svelte        the revealed block: stack, proof, link or reason, history
+src/routes/+page.svelte  arrangement: header, hero, legend, numbered sections, footer
+src/routes/+layout.*     fonts (self-hosted via Fontsource), title, JSON-LD, prerender flag
+src/routes/resume.json/  prerendered endpoint serving the resume object as JSON
+src/app.css              Obsidian console design tokens, .reveal animation, print styles
 ```
 
-Data drives both views. Toggling `audit.on` mounts the evidence under each claim; the
-`.reveal` class animates it in via `@starting-style` (no JS animation lib), staggered by `--i`
-to populate like a trace, and disabled under `prefers-reduced-motion`.
+Data drives both views. The evidence layer is always in the DOM and toggled with the global
+`.audit-only` display class (not `{#if}`), so `@media print` can force it visible — the printed
+page is the full audited resume on a light palette, with link URLs written out. On screen,
+toggling `audit.on` animates the layer in via `.reveal` and `@starting-style` (no JS animation
+lib), staggered by `--i` to populate like a trace, and disabled under `prefers-reduced-motion`.
+Opening the page with `?audit` in the query string turns the layer on at load, so shared links
+can lead with the proof.
 
 ## Aesthetic
 

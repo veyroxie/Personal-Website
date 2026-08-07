@@ -11,18 +11,16 @@
 	<header>
 		<h3>
 			{project.name}
-			{#if audit.on}
+			<span class="audit-only" class:on={audit.on}>
 				<TierBadge tier={project.evidence.tier} />
-			{/if}
+			</span>
 		</h3>
 		<p class="tagline mono">{project.tagline}</p>
 	</header>
 	<p class="desc">{project.description}</p>
-	{#if audit.on}
-		<div class="reveal" style="--i: {index}">
-			<Evidence evidence={project.evidence} />
-		</div>
-	{/if}
+	<div class="audit-only reveal" class:on={audit.on} style="--i: {index}">
+		<Evidence evidence={project.evidence} />
+	</div>
 </article>
 
 <style>
@@ -50,7 +48,7 @@
 	.tagline {
 		margin-top: 0.4rem;
 		color: var(--text-faint);
-		font-size: 0.64rem;
+		font-size: 0.68rem;
 		text-transform: none;
 		letter-spacing: 0.02em;
 	}
