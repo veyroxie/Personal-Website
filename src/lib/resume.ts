@@ -201,7 +201,7 @@ export const resume: Resume = {
 			tagline: 'Sequence models · PyTorch',
 			description:
 				'Trained RNN, LSTM, and Transformer models with attention for text generation and sequence classification, then compared how each performed.',
-			// TODO: flip to tier 'live' with the repo href once the public link is provided.
+			// Deliberately artifact: the source is graded coursework, kept private by choice.
 			evidence: {
 				tier: 'artifact',
 				stack: ['PyTorch', 'RNN', 'LSTM', 'Transformer'],
