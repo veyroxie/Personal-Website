@@ -43,6 +43,23 @@
 			{evidence.reason}
 		</span>
 	{/if}
+
+	{#if evidence.history?.length}
+		<details class="history">
+			<summary class="mono">
+				{evidence.history.length} revision{evidence.history.length === 1 ? '' : 's'} · last
+				{evidence.history[0].date}
+			</summary>
+			<ol>
+				{#each evidence.history as rev (rev.date + rev.note)}
+					<li>
+						<span class="date mono">{rev.date}</span>
+						<span class="note">{rev.note}</span>
+					</li>
+				{/each}
+			</ol>
+		</details>
+	{/if}
 </div>
 
 <style>
@@ -118,5 +135,56 @@
 	.lock {
 		width: 0.85em;
 		height: 0.85em;
+	}
+
+	.history summary {
+		width: fit-content;
+		color: var(--text-faint);
+		font-size: 0.64rem;
+		cursor: pointer;
+		list-style: none;
+	}
+
+	.history summary::-webkit-details-marker {
+		display: none;
+	}
+
+	.history summary::before {
+		content: '▸ ';
+	}
+
+	.history[open] summary::before {
+		content: '▾ ';
+	}
+
+	.history summary:hover {
+		color: var(--text-dim);
+	}
+
+	.history ol {
+		margin: 0.45rem 0 0;
+		padding: 0;
+		list-style: none;
+		display: flex;
+		flex-direction: column;
+		gap: 0.3rem;
+	}
+
+	.history li {
+		display: flex;
+		gap: 0.6rem;
+		align-items: baseline;
+	}
+
+	.date {
+		flex: none;
+		color: var(--text-faint);
+		font-size: 0.62rem;
+	}
+
+	.note {
+		color: var(--text-dim);
+		font-size: 0.75rem;
+		line-height: 1.5;
 	}
 </style>
