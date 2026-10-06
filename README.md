@@ -24,8 +24,10 @@ npm run preview  # serve the production build through a local Worker (wrangler d
 
 ## Content
 
-All content lives in `src/lib/resume.ts` (the single source of truth). Edit that file — not the
-components — to update claims, projects, skills, or links.
+Resume claims, skills and links live in `src/lib/resume.ts`. The room's case studies live in
+`src/content/projects/*.md`, one file each, validated at build time by the schema in
+`src/lib/server/content/schema.ts`. Edit those files, not the components. A case study's
+evidence tier must not be exceeded by its copy; see `docs/decisions.md` (D21).
 
 ## Deploy
 

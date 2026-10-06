@@ -145,3 +145,38 @@ question; never rewrite history, add a new entry that supersedes the old one.
   bound to, and Workers cannot be renamed. The name only affects the workers.dev URL, which
   nobody will see once ebstract.ly is attached. Recreating the Worker would cost dashboard
   steps for no user-visible gain.
+
+## 2026-10-06: Phase 1, content model
+
+### D18. Frontmatter via zod and gray-matter, body via marked, not mdsvex
+
+- Over: mdsvex, the Svelte-native Markdown route.
+- Why: mdsvex compiles Markdown into Svelte components, which suits prose with embedded
+  components but not this site. The app window needs typed fields (problem, built, result,
+  evidence), and the later "Ask my portfolio" index needs the raw text in chunkable
+  sections. Parsing the files directly gives both. Zod over valibot because Astro's content
+  collections use the same zod pattern, so the skill transfers.
+
+### D19. The content loader lives under src/lib/server
+
+- Over: a loader in src/lib that any component could import.
+- Why: SvelteKit refuses to bundle anything under $lib/server into the browser, so the
+  parsers can never leak into the client by accident. Pages receive the parsed data through
+  a server load function, which prerendering turns into static JSON at build time.
+
+### D20. The zod evidence schema is pinned to the existing Evidence type with satisfies
+
+- Over: inferring a new Evidence type from the schema and migrating the Audit components,
+  or keeping two unrelated definitions.
+- Why: resume.ts is imported by client components, so making it depend on zod would ship
+  the library to the browser. `satisfies z.ZodType<Evidence>` keeps one runtime type and
+  turns any drift between schema and type into a compile error.
+
+### D21. Room copy may not claim more than its evidence tier supports
+
+- Over: using the prototype's copy as written.
+- Why: the prototype called the author "AI Engineer, lead developer" and said the pipeline
+  was "shipped to commercial building clients"; the audited resume says part-time intern to
+  engineer and attests production only. A room that outclaims the audited page under it
+  defeats the site's premise. Unconfirmed lines carry a TODO comment in the frontmatter and
+  the pipeline stays attested until it is matched to the artifact-tier resume claim.

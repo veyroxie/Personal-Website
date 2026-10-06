@@ -33,8 +33,10 @@ site attests to the work, it does not narrate confidential internals.
 ## Architecture
 
 ```
-src/lib/resume.ts        single source of truth — all content + types
+src/lib/resume.ts        resume claims, skills, links + the Evidence types
 src/lib/resume.test.ts   data invariants (dates, https links, reasons); gates the deploy
+src/content/projects/    one Markdown case study per room project (frontmatter + notes body)
+src/lib/server/content/  zod schema pinned to Evidence, build-time loader, content tests
 src/lib/audit.svelte.ts  shared reactive state: audit.on
 src/lib/components/
   AuditToggle.svelte     the one switch; mutates audit.on
