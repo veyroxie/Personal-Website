@@ -1,0 +1,21 @@
+/* Room palette: pink, black and silver bedroom at night. Paper, ink, mute and line
+   stay in app.css with the editorial values until the simple view is restyled. */
+:root {
+	--night: #0d0b0f;
+	--wall-l: #e59ab8;
+	--wall-r: #f3b6cc;
+	--wall-trim: #c9ccd4;
+	--floor: #1c1a1f;
+	--floor-2: #2b2830;
+	--wood: #2e2b33;
+	--wood-2: #1d1b21;
+	--wood-3: #141216;
+	--lamp: #ff9cc4;
+	--accent: #e85d95;
+
+	/* Font files are imported where first used, not here; the fallbacks carry until then. */
+	--font-display: 'Syne Variable', ui-sans-serif, system-ui, sans-serif;
+	--font-body: 'Figtree Variable', ui-sans-serif, system-ui, sans-serif;
+	--font-hand: 'Caveat Variable', cursive;
+	--font-book: 'Newsreader Variable', Georgia, serif;
+}

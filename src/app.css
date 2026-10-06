@@ -1,3 +1,5 @@
+@import './styles/tokens.css';
+
 /* Editorial paper: a document that cites its sources should look like a document.
    Cool off-white stock, near-black ink, serif prose, mono strictly for metadata.
    One accent — proofreader's blue — reserved for the live evidence tier. */

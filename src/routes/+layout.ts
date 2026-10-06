@@ -1,2 +1,2 @@
-// The whole site is static; prerender every route so adapter-static emits plain HTML.
+// Every route is prerendered to plain HTML; the Worker only serves files until a server route exists.
 export const prerender = true;

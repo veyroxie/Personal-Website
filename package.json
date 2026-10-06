@@ -6,23 +6,28 @@
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build",
-		"preview": "vite preview",
+		"preview": "wrangler dev",
 		"prepare": "svelte-kit sync || echo ''",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"test": "vitest run",
-		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
+		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+		"deploy": "wrangler deploy"
 	},
 	"devDependencies": {
+		"@fontsource-variable/caveat": "^5.3.0",
+		"@fontsource-variable/figtree": "^5.3.0",
+		"@fontsource-variable/newsreader": "^5.3.0",
+		"@fontsource-variable/syne": "^5.3.0",
 		"@fontsource/inter": "^5.3.0",
 		"@fontsource/jetbrains-mono": "^5.3.0",
-		"@sveltejs/adapter-auto": "^7.0.1",
-		"@sveltejs/adapter-static": "^3.0.10",
+		"@sveltejs/adapter-cloudflare": "^7.2.9",
 		"@sveltejs/kit": "^2.63.0",
 		"@sveltejs/vite-plugin-svelte": "^7.1.2",
 		"svelte": "^5.56.1",
 		"svelte-check": "^4.6.0",
 		"typescript": "^6.0.3",
 		"vite": "^8.0.16",
-		"vitest": "^4.1.10"
+		"vitest": "^4.1.10",
+		"wrangler": "^4.147.0"
 	}
 }

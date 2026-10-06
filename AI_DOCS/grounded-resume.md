@@ -64,15 +64,17 @@ for attested). Restraint over effects.
 
 ## Deploy
 
-Static export to GitHub Pages.
+Cloudflare Worker with static assets, built by Cloudflare Workers Builds on push.
 
-- `@sveltejs/adapter-static` + `export const prerender = true` (`src/routes/+layout.ts`).
-- `paths.base = '/Personal-Website'` in `vite.config.ts` (project-page subpath). Asset paths
-  emit relative, so they stay portable under the subpath.
-- `static/.nojekyll` keeps Pages from stripping `_app/`.
-- `.github/workflows/deploy.yml` builds on push to `main` and publishes.
+- `@sveltejs/adapter-cloudflare` + `export const prerender = true` (`src/routes/+layout.ts`),
+  so the Worker only serves prerendered files until a server route is added.
+- `wrangler.jsonc` names the generated Worker and the assets directory
+  (`.svelte-kit/cloudflare`). `npm run preview` runs it locally through `wrangler dev`.
+- The site lives at the domain root; there is no base path.
+- `main` deploys production, every other branch gets a preview URL.
 
-**One manual step, web UI only:** GitHub → Settings → Pages → Source → "GitHub Actions".
+**One manual step, web UI only:** Cloudflare dashboard → Workers and Pages → import the repo.
+Why Workers rather than Pages or GitHub Pages: see `../docs/decisions.md` (D4, D5).
 
 ## Updating content
 
