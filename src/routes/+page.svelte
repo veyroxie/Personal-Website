@@ -6,6 +6,7 @@
 	import AuditToggle from '$lib/components/AuditToggle.svelte';
 	import Claim from '$lib/components/Claim.svelte';
 	import ProjectCard from '$lib/components/ProjectCard.svelte';
+	import Seo from '$lib/components/Seo.svelte';
 	import TierBadge from '$lib/components/TierBadge.svelte';
 	import { resume } from '$lib/resume';
 
@@ -34,13 +35,24 @@
 	<p class="eyebrow mono"><span class="num">{num}</span> {title}</p>
 {/snippet}
 
+<Seo
+	title="Elyesa Tee, a resume that cites its sources"
+	description="Software and data engineer. Flip Audit to see the evidence tier behind every claim: live, artifact, or attested."
+	path="/"
+	image="/og.png"
+	type="profile"
+/>
+
 <header class="bar no-print">
 	<div class="bar-inner">
 		<div class="ident">
 			<span class="ident-name">{resume.name}</span>
 			<span class="ident-role mono">{resume.role}</span>
 		</div>
-		<AuditToggle />
+		<div class="bar-actions">
+			<a class="nav-link mono" href="/projects">Case studies</a>
+			<AuditToggle />
+		</div>
 	</div>
 </header>
 
@@ -210,6 +222,23 @@
 		color: var(--text-faint);
 		font-size: 0.66rem;
 		white-space: nowrap;
+	}
+
+	.bar-actions {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+		flex: none;
+	}
+
+	.nav-link {
+		color: var(--text-dim);
+		text-decoration: none;
+	}
+
+	.nav-link:hover,
+	.nav-link:focus-visible {
+		color: var(--text);
 	}
 
 	main {

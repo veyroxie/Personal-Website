@@ -180,3 +180,29 @@ question; never rewrite history, add a new entry that supersedes the old one.
   engineer and attests production only. A room that outclaims the audited page under it
   defeats the site's premise. Unconfirmed lines carry a TODO comment in the frontmatter and
   the pipeline stays attested until it is matched to the artifact-tier resume claim.
+
+## 2026-10-06: Phase 1, pages and SEO
+
+### D22. Information architecture: room at /, case studies at /projects, resume at /resume
+
+- Over: folding the case studies into the Grounded page, or replacing Grounded outright.
+- Why: three audiences, three entry points. The room is the hook at /. The /projects list
+  is the one-click "simple view" of the work, and each case study has a crawlable URL. The
+  audited resume moves to /resume when the room lands and keeps the print-to-PDF path.
+  Until Phase 2, Grounded stays at / so the deployed site never regresses mid-build.
+
+### D23. Absolute URLs come from PUBLIC_SITE_URL, not source
+
+- Over: hardcoding the domain in the Seo component or app.html, as the old OG tags did.
+- Why: the house rule bans hardcoded hosts, and the site is about to change domain from
+  GitHub Pages to ebstract.ly. One build variable, read at build time through
+  $env/static/public, means the build fails loudly if it is missing rather than shipping
+  share previews with a dead origin.
+
+### D24. Per-page Seo component replaces the global tags in app.html
+
+- Over: keeping title and Open Graph tags in app.html.
+- Why: app.html is one template for every route, so the case study pages would have shown
+  the resume's title and image in every share preview. A component with title, description,
+  path and image props gives each page its own, and the type-checker catches a page that
+  forgets one.

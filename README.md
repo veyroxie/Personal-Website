@@ -14,6 +14,9 @@ static assets. The isometric room build is in progress on this branch; its decis
 
 ## Develop
 
+Copy `.env.example` to `.env` and set `PUBLIC_SITE_URL` (the dev server origin locally). The
+build reads it to write canonical and Open Graph URLs, and fails if it is missing.
+
 ```bash
 npm install
 npm run dev      # local dev server

@@ -28,7 +28,6 @@
 </script>
 
 <svelte:head>
-	<title>Elyesa Tee — a resume that cites its sources</title>
 	<link rel="icon" href={favicon} />
 	{@html `<script type="application/ld+json">${personLd}</script>`}
 </svelte:head>
