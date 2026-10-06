@@ -137,3 +137,11 @@ question; never rewrite history, add a new entry that supersedes the old one.
 - Why: vite preview serves files but does not emulate the Worker, so it could pass locally
   and fail on Cloudflare. wrangler dev runs the exact generated Worker against the built
   assets, which is the thing being deployed.
+
+### D17. Worker name is personal-website, matching what Cloudflare created on import
+
+- Over: keeping ebstractly in the config, or deleting and recreating the Worker under that name.
+- Why: Workers Builds refuses to deploy when the config name differs from the Worker it is
+  bound to, and Workers cannot be renamed. The name only affects the workers.dev URL, which
+  nobody will see once ebstract.ly is attached. Recreating the Worker would cost dashboard
+  steps for no user-visible gain.

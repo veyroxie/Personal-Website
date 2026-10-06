@@ -1,6 +1,6 @@
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
-	"name": "ebstractly",
+	"name": "personal-website",
 	// The adapter generates this Worker at build time; it serves prerendered pages and assets.
 	"main": ".svelte-kit/cloudflare/_worker.js",
 	"compatibility_date": "2026-09-01",
